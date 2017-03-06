@@ -1,19 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="ru">
 <head>
+    <title>Polyhedron - многопользовательский пинг-понг</title>
     <meta charset="UTF-8">
-    <title>Error page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/main.css">
 </head>
 <body>
-    <h1 id="err_msg">Wrong URL</h1>
+<div class="top">
 
-    <script>
-        function errorFunc () {
-            let errorHeader = document.getElementById("err_msg");
-            errorHeader.textContent = "Wrong URL: " + document.URL;
-        }
-
-        errorFunc();
-    </script>
+</div>
+<div class="container">
+    <div class="container-inner">
+        <h1 class="header"><a href="/">Polyhedron</a></h1>
+        <h2 class="subheader">404</h2>
+        <div class="content">
+            <p>Запрошенная Вами страница не найдена.</p>
+            <p>Вы можете вернуться <a href="javascript:history.back()">назад</a> или <a href="/">в меню</a>.</p>
+        </div>
+    </div>
+</div>
 </body>
 </html>

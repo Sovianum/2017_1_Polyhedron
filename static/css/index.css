@@ -1,24 +1,4 @@
-.menu{
-	position: fixed; 
-	top: 35%;
-	left: 50%;
-}
-
-.user-presentation{
-	position: fixed; 
-	top: 45%; 
-	left: 37.5%;
-}
-
-.user-value{
-	position: fixed; 
-	top: 51%; 
-	left: 40%;
-}
-
-.start-game-buttons{
-	position: fixed; 
-	top: 62%; 
-	left: 44%; 
-	max-width: 200px;
+.menu a:hover {
+    font-size: 120%;
+    font-weight: bold;
 }

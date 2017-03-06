@@ -1,0 +1,12 @@
+form.login(autocomplete="off")
+    p
+        label(for="username") Логин:
+        input(type="text" id="username" autofocus placeholder="Введите логин")
+        label.error(for="username")
+    p
+        label(for="password") Пароль:
+        input(type="password" id="password" placeholder="Введите пароль")
+        label.error(for="password")
+    p
+        input.submit(type="submit" value="Войти")
+    a(data-page="signup") Зарегистрироваться

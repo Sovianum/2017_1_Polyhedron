@@ -1,0 +1,6 @@
+table
+    each item, index in locals.leaders.length ? locals.leaders : ['Лидеров пока нет']
+        tr(class= (item.name === user.name) ? 'you' : '')
+            td.place= index + 1
+            td.name= item.name
+            td.score= item.score

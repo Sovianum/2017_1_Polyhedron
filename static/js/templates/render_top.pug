@@ -1,0 +1,20 @@
+if window.user
+    a(data-page="index") В меню
+    |
+    span.divider-dot &#183;
+    |
+    a(data-page="leaders") Привет, #{user.name}!
+    |
+    span.divider-dot &#183;
+    |
+    a(data-page="logout") Выйти
+else
+    a(data-page="index") Меню
+    |
+    span.divider-dot &#183;
+    |
+    a(data-page="login") Войти
+    |
+    span.divider-dot &#183;
+    |
+    a(data-page="signup") Зарегистрироваться

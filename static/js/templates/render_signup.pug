@@ -1,0 +1,20 @@
+form.registration(autocomplete="off")
+    p
+        label(for="username") Логин:
+        input#username(type="text" autofocus placeholder="Введите логин")
+        label.error(for="username") Такой логин уже занят
+    p
+        label(for="password") Пароль:
+        input#password(type="password" placeholder="Введите пароль")
+        label.error(for="password") Пароль слишком простой
+    p
+        label(for="password2") Еще раз пароль:
+        input#password2(type="password" placeholder="Повторите пароль")
+        label.error(for="password2") Пароли должны совпадать
+    p
+        label(for="email") E-mail:
+        input#email(type="email" placeholder="example@example.com")
+        label.error(for="email") Некорректный email
+    p
+        input.submit(type="submit" value="Зарегистрироваться")
+    a(data-page="login") Войти

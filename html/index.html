@@ -1,25 +1,41 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <title>Polyhedron - многопользовательский пинг-понг</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link rel="stylesheet" href="/static/css/leaders.css">
+    <link rel="stylesheet" href="/static/css/forms.css">
 </head>
 <body>
-<div class="top">
-    <a href="/login">Войти</a> / <a href="/register">Зарегистрироваться</a>
-</div>
+<div class="top"><a data-page="login">Войти</a> / <a data-page="signup">Зарегистрироваться</a></div>
 <div class="container">
     <div class="container-inner">
-        <h1 class="header">Polyhedron</h1>
+        <h1 class="header"><a data-page="index">Polyhedron</a></h1>
         <h2 class="subheader">Многопользовательский пинг-понг</h2>
-        <nav class="items menu">
-            <a href="/game" class="play">Играть</a>
-            <a href="/leaders">Лидеры</a>
-            <a href="/about">Об игре</a>
-        </nav>
+        <div class="content">
+            <p>Не получается загрузить игру.</p>
+            <p>Требуется корректно работающий JavaScript в Вашем браузере.</p>
+            <p>Пожалуйста, проверьте настройки!</p>
+        </div>
     </div>
 </div>
+
+<script src="/static/js/templates/render_index.js"></script>
+<script src="/static/js/templates/render_about.js"></script>
+<script src="/static/js/templates/render_game.js"></script>
+<script src="/static/js/templates/render_leaders.js"></script>
+<script src="/static/js/templates/render_login.js"></script>
+<script src="/static/js/templates/render_signup.js"></script>
+<script src="/static/js/templates/render_top.js"></script>
+<script src="/static/js/index.js"></script>
+<script src="/static/js/about.js"></script>
+<script src="/static/js/game.js"></script>
+<script src="/static/js/leaders.js"></script>
+<script src="/static/js/login.js"></script>
+<script src="/static/js/signup.js"></script>
+<script src="/static/js/main.js"></script>
 </body>
 </html>

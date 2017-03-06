@@ -1,16 +1,17 @@
-.heading-leaders{
-	font-size: 20pt; 
-	margin-left: 42%; 
-	margin-top: 5%;
+.you {
+    font-weight: bold;
+    text-shadow: 1px 1px 2px black,
+        0 0 30px #aa0101,
+        0 0 10px red;
 }
 
-.list-fields{
-	position: block; 
-	margin-left: 35%; 
-	width: 30%;
-	font-size: large;
+.content td.score, .content td.place {
+    width: 10%;
 }
 
-ol.list-fields a{
-	padding-left: 110px !important;
+.content tr:hover td {
+    border-bottom: 1px dashed white;
+    text-shadow: 1px 1px 2px black,
+        0 0 30px #aa0101,
+        0 0 10px red;
 }

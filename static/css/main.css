@@ -1,0 +1,138 @@
+@font-face {
+    font-family: 'Roboto Slab';
+    src: url('../fonts/RobotoSlab-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Roboto Slab';
+    font-weight: bold;
+    src: url('../fonts/RobotoSlab-Bold.ttf');
+}
+
+* {
+    outline: none;
+}
+
+html {
+    height: 100%;
+    width: 100%;
+    min-width: 25rem;
+    overflow-x: hidden;
+    padding: 0;
+    margin: 0;
+    background: black url('../images/background.gif') 50% 50%;
+    color: white;
+    font-family: 'Roboto Slab', serif;
+    text-align: center;
+    text-shadow: -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
+}
+
+body {
+    height: 100%;
+    margin: 0;
+    background: url('../images/emblem.gif') no-repeat 60vw 50%;
+}
+
+.top {
+    padding: .5rem;
+    border-bottom: 1px dashed gray;
+}
+
+.container {
+    width: 100%;
+    height: 90%;
+    display: table;
+}
+
+.container-inner {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.content, .content table {
+    width: 0;
+    min-width: 20rem;
+    margin: 3rem auto auto;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+}
+
+.accented-larger {
+    font-size: 120%;
+
+}
+
+.accented-color {
+    color: red;
+}
+
+.header {
+    font-size: 400%;
+    margin-bottom: 0;
+}
+
+.header:hover {
+    text-shadow: 1px 1px 2px black,
+        0 0 10px #aa0101,
+        0 0 5px red;
+}
+
+.subheader {
+    font-size: 120%;
+    margin-top: 0;
+}
+
+
+.accented {
+    color: red;
+}
+
+.bigger {
+    font-size: 120%;
+}
+
+.divider-dot {
+    font-weight: bold;
+    display: inline-block;
+    margin: 0 .5rem;
+}
+
+.content td {
+    height: 2.8rem;
+    line-height: 2.8rem;
+    border-bottom: 1px dashed gray;
+}
+
+p {
+    display: block;
+    margin: 1rem 0;
+    padding-bottom: 1rem;
+    border-bottom: 1px dashed gray;
+}
+
+a.block {
+    display: block;
+    height: 2.8rem;
+    margin: .5rem;
+    padding: 0;
+    line-height: 2.8rem;
+    border-bottom: 1px dashed gray;
+}
+
+a:hover, a:active {
+    text-shadow: 1px 1px 2px black,
+        0 0 30px #aa0101,
+        0 0 10px red;
+}
+
+a.block:hover, a.block:active {
+    border-bottom: 1px dashed white;
+}

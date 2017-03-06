@@ -1,0 +1,44 @@
+.content form p {
+    display: block;
+    margin: 1rem .5rem;
+    padding-bottom: 0;
+    border-bottom: 1px dashed gray;
+}
+
+.content label {
+    display: block;
+}
+
+.content input {
+    width: 100%;
+    height: 2.8rem;
+    line-height: 2.8rem;
+    border: none;
+    background: none;
+    color: white;
+    font: inherit;
+    text-align: center;
+}
+
+input.submit {
+    font-weight: bold;
+    margin-top: 1rem;
+    border: 1px dashed gray;
+}
+
+.error {
+    color: red;
+    margin-bottom: .5rem;
+    /* visibility: hidden; */
+}
+
+.content form p:active, .content form p:hover {
+    border-bottom: 1px dashed white;
+}
+
+.content form p:active, .content form p:hover,
+.submit:hover, .submit:active {
+    text-shadow: 1px 1px 2px black,
+    0 0 30px #aa0101,
+    0 0 10px red;
+}
