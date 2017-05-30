@@ -9,7 +9,7 @@ export const clientSideServices = [
     VariableContext,
     InputController,
     EventBus,
-    // WSEndpoint
+    WSEndpoint
 ];
 
 export const serverSideServices = [

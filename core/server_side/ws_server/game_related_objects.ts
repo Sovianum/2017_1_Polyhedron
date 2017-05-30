@@ -89,7 +89,7 @@ export function rotateGameWorldState(worldState: GameWorldState, offsetIndex: nu
                 position: rotate(platformState.position),
                 angle: platformState.angle + rotationAngle,
                 velocity: rotate(platformState.velocity),
-                isActive: platformState.isActive
+                active: platformState.active
             };
         })
     };

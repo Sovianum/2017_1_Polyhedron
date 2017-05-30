@@ -13,7 +13,7 @@ export interface PlatformState {
     position: Point;
     angle: number;
     velocity: Vector;
-    isActive: boolean;
+    active: boolean;
 }
 
 

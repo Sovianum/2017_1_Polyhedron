@@ -31,14 +31,14 @@ export const config = {
             ballRelativeRadius: 0.05,
             ballVelocity: [0.00, 0.06],
             platformVelocity: 0.03,
-            minimalOffset: 1,
+            minimalOffset: 0.2,
 
             platformCollisionAccuracy: 1,
             sectorCollisionAccuracy: 0.5
         },
 
         network: {
-            wsUrl: "ws://localhost:8081"
+            wsUrl: "ws://localhost:8080/api/user/game"
         }
     }
 };

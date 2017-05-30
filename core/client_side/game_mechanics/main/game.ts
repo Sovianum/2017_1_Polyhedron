@@ -141,7 +141,6 @@ export class Game {
         this.eventBus.addEventListener(
             GameStartEvent.eventName,
             event => {
-                this._world.setState(event.data.detail);
                 this.start();
             }
         );
@@ -173,8 +172,8 @@ export class Game {
 
         const activePlatformOffset = math.subtract(this._activePlatform.position, this._lastPlatformPosition);
         if (math.norm(activePlatformOffset) > this._gameConfig.minimalOffset) {
-            this.eventBus.dispatchEvent(PlatformMovedEvent.create(this._activePlatform.position));
             this._lastPlatformPosition = this._activePlatform.position;
+            this.eventBus.dispatchEvent(PlatformMovedEvent.create(this._activePlatform));
         }
 
         this._redraw();

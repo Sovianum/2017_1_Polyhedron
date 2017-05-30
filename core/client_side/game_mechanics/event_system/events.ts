@@ -1,4 +1,5 @@
 'use strict';
+import {Platform} from "../game_components/platform";
 
 class MyCustomEvent {
     public data: any;
@@ -74,7 +75,13 @@ export namespace networkEvents {
 
 
 export namespace gameEvents {
-    export class PlatformMovedEvent extends BaseEvent {}
+    export class PlatformMovedEvent extends BaseEvent {
+        public static create(platform: Platform) {
+            return new MyCustomEvent(this.eventName, {
+                detail: platform.getState(),
+            });
+        }
+    }
 
 
     export class ClientDefeatEvent extends BaseEvent {}

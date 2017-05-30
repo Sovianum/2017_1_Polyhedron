@@ -10,7 +10,7 @@ import {GameComponent} from "../base/game_component";
 import {EventBus} from "../event_system/event_bus";
 import {Autowired, Load} from "../experimental/decorators";
 import {getNearestCollisionMultiObstacle} from "../base/collision_handling";
-import {GameWorldState} from "../event_system/messages";
+import {GameWorldState, PlatformState} from "../event_system/messages";
 import {Stateful} from "../experimental/interfaces";
 import {Drawable, Rectangular} from "../drawing/interfaces";
 import {platformFromTriangleField} from "../game_components/helper_functions";
@@ -67,7 +67,10 @@ export class GameWorld implements Drawable, Stateful<GameWorldState> {
 
     public setState(state: GameWorldState) {
         this._ball.setState(state.ballState);
-        state.platformsState.forEach((data, index) => {
+
+        state.platformsState
+            .sort((left, right) => left.angle - right.angle)
+            .forEach((data, index) => {
             this._platforms[index].setState(data);
         });
     }

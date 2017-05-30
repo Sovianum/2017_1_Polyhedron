@@ -31,8 +31,9 @@ export class Platform extends GameComponent implements Drawable, PolygonObstacle
         return {
             position: this.position,
             angle: this.rotation,
-            velocity: this.velocity,
-            isActive: this.isActive
+            velocity: [0, 0],
+            // velocity: this.velocity,    // TODO uncomment
+            active: this.isActive
         };
     }
 
@@ -40,7 +41,7 @@ export class Platform extends GameComponent implements Drawable, PolygonObstacle
         this._origin = state.position;
         this._angle = state.angle;
         this._velocity = state.velocity;
-        this._isActive = state.isActive;
+        this._isActive = state.active;
     }
 
     public setActive(isActive: boolean = true) {

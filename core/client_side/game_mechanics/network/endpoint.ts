@@ -3,12 +3,6 @@ import * as events from '../event_system/events';
 import {Load, Autowired} from "../experimental/decorators";
 import {EventBus} from "../event_system/event_bus";
 
-const REQUEST_TYPES = {
-    roomRequest: "roomRequest",
-    gameStart: "gameStart",
-    stateUpdate: "stateUpdate"
-};
-
 export class WSEndpoint {
     private _socket: WebSocket;
 
@@ -20,8 +14,7 @@ export class WSEndpoint {
 
     private static _getRequestJson(type, data) {
         return JSON.stringify({
-            requestType: type,
-            data
+            type, data
         });
     }
 
