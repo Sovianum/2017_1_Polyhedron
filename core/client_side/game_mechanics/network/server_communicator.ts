@@ -48,7 +48,10 @@ export class ServerCommunicator {
             const data = detail.data;
 
             try {
-                this._eventBus.dispatchEvent(this._eventMap[gameEventClass].create(data));
+                const newEvent = this._eventMap[gameEventClass].create(data);
+                // newEvent.data.id = detail.id;
+                newEvent.data.timestamp = detail.timestamp;
+                this._eventBus.dispatchEvent(newEvent);
             } catch (error) {
                // console.error(error);   // TODO refactor
             }

@@ -14,6 +14,8 @@ import {GameWorldState, PlatformState} from "../event_system/messages";
 import {Stateful} from "../experimental/interfaces";
 import {Drawable, Rectangular} from "../drawing/interfaces";
 import {platformFromTriangleField} from "../game_components/helper_functions";
+import {ClientRuledStateQueue, ServerRuledStateQueue} from "../ping_correction/state_queue";
+import {interpGameWorldState} from "../ping_correction/state_interpolation";
 
 
 export class GameWorld implements Drawable, Stateful<GameWorldState> {
@@ -34,6 +36,8 @@ export class GameWorld implements Drawable, Stateful<GameWorldState> {
     private _gameConfig;
 
     private _lastCollidedObject: GameComponent = null;
+    // private _stateQueue: ClientRuledStateQueue<GameWorldState>;
+    private _stateQueue: ServerRuledStateQueue<GameWorldState>;
 
     constructor(userNum: number, sectorHeight: number, ballRadius: number, position: number[] = [0, 0]) {
         this._userNum = userNum;
@@ -46,6 +50,8 @@ export class GameWorld implements Drawable, Stateful<GameWorldState> {
         this._neutralSectors = [];
         this._platforms = [];
         this._ball = null;
+        // this._stateQueue = new ClientRuledStateQueue<GameWorldState>(this._gameConfig.minQueueSize, interpGameWorldState);
+        this._stateQueue = new ServerRuledStateQueue<GameWorldState>(this._gameConfig.minQueueSize, interpGameWorldState);
 
         this._score = 0; // TODO only for pretest
 
@@ -73,6 +79,14 @@ export class GameWorld implements Drawable, Stateful<GameWorldState> {
             .forEach((data, index) => {
             this._platforms[index].setState(data);
         });
+    }
+
+    // public addSnapshot(state: GameWorldState) {
+    //     this._stateQueue.addState(state);
+    // }
+
+    public addSnapshot(state: GameWorldState, timestamp: number) {
+        this._stateQueue.addState(state, timestamp);
     }
 
     public get ball(): Ball {
@@ -107,20 +121,38 @@ export class GameWorld implements Drawable, Stateful<GameWorldState> {
         platform.moveByWithConstraints(globalOffset, velocityVector);
     }
 
-    public makeIteration(time) {
+    public makeMultiPlayerIteration(time: number) {
+        const now = Date.now();
+        const interpState = this._stateQueue.getInterpState(now);
+        if (interpState) {
+            // this.setState(interpState);
+            // const temp = this._platforms[0].getState();
+            // this.setState(this._stateQueue.getLastState()); // TODO get rid of this trick
+            // this._platforms[0].setState(temp);
+            // this._ball.setState(interpState.ballState);
+
+            const temp = this._platforms[0].getState();
+            this.setState(interpState);
+            this._platforms[0].setState(temp); // TODO get rid of this trick
+        } else {
+            this.makeSinglePlayerIteration(time);
+        }
+    }
+
+    public makeSinglePlayerIteration(time: number) {
         let restTime = time;
-        let updateTime = this._innerMakeIteration(restTime);
+        let updateTime = this._innerMakeSinglePLayerIteration(restTime);
         while (updateTime) {
             restTime -= updateTime;
             if (restTime === 0) {
                 break;
             }
 
-            updateTime = this._innerMakeIteration(restTime);
+            updateTime = this._innerMakeSinglePLayerIteration(restTime);
         }
     }
 
-    private _innerMakeIteration(time) {
+    private _innerMakeSinglePLayerIteration(time) {
         const platformCollision = getNearestCollisionMultiObstacle(
             this.ball, this.platforms, 0, time, this.ball.radius / this._gameConfig.platformCollisionAccuracy
         );

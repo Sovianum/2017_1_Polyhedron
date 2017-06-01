@@ -53,8 +53,6 @@ export class Game {
     private _bots: Bot[];
     private _world: GameWorld;
 
-    private _communicator: ServerCommunicator;
-
     private _running: boolean;
 
     constructor(mode) {
@@ -77,8 +75,6 @@ export class Game {
 
         if (this._mode === MODES.single) {
             this._createBots();
-        } else {
-            this._communicator = new ServerCommunicator();
         }
     }
 
@@ -134,7 +130,8 @@ export class Game {
         this.eventBus.addEventListener(
             events.networkEvents.WorldUpdateEvent.eventName,
             event => {
-                this._world.setState(event.data.detail);
+                // this._world.setState(event.data.detail);
+                this._world.addSnapshot(event.data.detail, event.data.timestamp);
             }
         );
 
@@ -166,7 +163,11 @@ export class Game {
     }
 
     private _makeIteration(time) {
-        this._world.makeIteration(time);
+        if (this._mode === MODES.single) {
+            this._world.makeSinglePlayerIteration(time);
+        } else if (this._mode === MODES.multi) {
+            this._world.makeMultiPlayerIteration(time);
+        }
 
         this._handleUserInput(time);
 
