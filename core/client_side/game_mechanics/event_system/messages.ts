@@ -14,12 +14,16 @@ export interface PlatformState {
     angle: number;
     velocity: Vector;
     active: boolean;
+    lastMessageId?: number;
+    msElapsed?: number;
 }
 
 
 export interface GameWorldState {
     ballState: BallState;
     platformsState: PlatformState[];
+    id?: number;
+    timestamp?: number;
 }
 
 

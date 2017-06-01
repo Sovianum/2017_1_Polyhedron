@@ -35,7 +35,7 @@ export const config = {
 
             platformCollisionAccuracy: 1,
             sectorCollisionAccuracy: 0.5,
-            minQueueSize: 5,
+            minQueueSize: 2,
         },
 
         network: {

@@ -34,6 +34,18 @@ export function getNextState<T>(time: number, states: Array<TimeStampState<T>>, 
 }
 
 
+export function getLastMessage<T>(time: number, states: Array<TimeStampState<T>>): TimeStampState<T> {
+    const sortedStates = states.sort((left, right) => left.timestamp - right.timestamp);
+    const indexPair = getSurroundingIndexPair(time, sortedStates.map(state => state.timestamp));
+
+    if (!indexPair.first) {
+        return null;
+    } else {
+        return states[indexPair.first];
+    }
+}
+
+
 function getSurroundingIndexPair(x: number, x0SortedArr: number[]): Pair<number> {
     const candidates = x0SortedArr
         .filter(x0 => x0 <= x);

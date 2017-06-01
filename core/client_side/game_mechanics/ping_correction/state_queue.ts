@@ -18,6 +18,10 @@ export abstract class AbstractStateQueue<T> {
         this._interpolator = interpolator;
     }
 
+    public getQueue(): Array<TimeStampState<T>> {
+        return this._queue;
+    }
+
     public isActivated(): boolean {
         return this._activated;
     }
@@ -67,6 +71,10 @@ export class ServerRuledStateQueue<T> extends AbstractStateQueue<T> {
     public constructor(minQueueSize: number, interpolator: Interpolator) {
         super(minQueueSize, interpolator);
         this._started = false;
+    }
+
+    public getServerTime(time: number): number {
+        return time - this._clientStartTime + this._serverStartTime;
     }
 
     public addState(state: T, serverTimeStamp: number) {

@@ -16,6 +16,7 @@ import {Drawable, Rectangular} from "../drawing/interfaces";
 import {platformFromTriangleField} from "../game_components/helper_functions";
 import {ClientRuledStateQueue, ServerRuledStateQueue} from "../ping_correction/state_queue";
 import {interpGameWorldState} from "../ping_correction/state_interpolation";
+import {getLastMessage} from "../ping_correction/interp_functions";
 
 
 export class GameWorld implements Drawable, Stateful<GameWorldState> {
@@ -34,9 +35,9 @@ export class GameWorld implements Drawable, Stateful<GameWorldState> {
     private _score: number;
     @Load('game')
     private _gameConfig;
+    private _lastUpdate: number;
 
     private _lastCollidedObject: GameComponent = null;
-    // private _stateQueue: ClientRuledStateQueue<GameWorldState>;
     private _stateQueue: ServerRuledStateQueue<GameWorldState>;
 
     constructor(userNum: number, sectorHeight: number, ballRadius: number, position: number[] = [0, 0]) {
@@ -54,6 +55,7 @@ export class GameWorld implements Drawable, Stateful<GameWorldState> {
         this._stateQueue = new ServerRuledStateQueue<GameWorldState>(this._gameConfig.minQueueSize, interpGameWorldState);
 
         this._score = 0; // TODO only for pretest
+        this._lastUpdate = 0;
 
         this._initSectors();
         this._initBall();
@@ -80,10 +82,6 @@ export class GameWorld implements Drawable, Stateful<GameWorldState> {
             this._platforms[index].setState(data);
         });
     }
-
-    // public addSnapshot(state: GameWorldState) {
-    //     this._stateQueue.addState(state);
-    // }
 
     public addSnapshot(state: GameWorldState, timestamp: number) {
         this._stateQueue.addState(state, timestamp);
@@ -124,19 +122,24 @@ export class GameWorld implements Drawable, Stateful<GameWorldState> {
     public makeMultiPlayerIteration(time: number) {
         const now = Date.now();
         const interpState = this._stateQueue.getInterpState(now);
-        if (interpState) {
-            // this.setState(interpState);
-            // const temp = this._platforms[0].getState();
-            // this.setState(this._stateQueue.getLastState()); // TODO get rid of this trick
-            // this._platforms[0].setState(temp);
-            // this._ball.setState(interpState.ballState);
+        const lastMessage = getLastMessage(now, this._stateQueue.getQueue());
 
+        if (interpState) {
             const temp = this._platforms[0].getState();
+
             this.setState(interpState);
+            this._lastUpdate += 1;
+
+            this._platforms.forEach((platform, index) => platform.setState(interpState.platformsState[index]));
             this._platforms[0].setState(temp); // TODO get rid of this trick
-        } else {
-            this.makeSinglePlayerIteration(time);
         }
+
+        this.makeSinglePlayerIteration(time);
+
+        return {
+            msElapsed: this._stateQueue.getServerTime(now) - lastMessage.state.timestamp,
+            lastMessageId: lastMessage.state.id
+        };
     }
 
     public makeSinglePlayerIteration(time: number) {

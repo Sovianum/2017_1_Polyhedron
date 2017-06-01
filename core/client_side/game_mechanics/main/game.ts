@@ -130,6 +130,9 @@ export class Game {
         this.eventBus.addEventListener(
             events.networkEvents.WorldUpdateEvent.eventName,
             event => {
+                const worldState = event.data.detail;
+                worldState.id = event.data.id;
+                worldState.timestamp = event.data.timestamp;
                 // this._world.setState(event.data.detail);
                 this._world.addSnapshot(event.data.detail, event.data.timestamp);
             }
@@ -166,17 +169,20 @@ export class Game {
         if (this._mode === MODES.single) {
             this._world.makeSinglePlayerIteration(time);
         } else if (this._mode === MODES.multi) {
-            this._world.makeMultiPlayerIteration(time);
+            const {msElapsed, lastMessageId} = this._world.makeMultiPlayerIteration(time);
+
+            const activePlatformOffset = math.subtract(this._activePlatform.position, this._lastPlatformPosition);
+            if (math.norm(activePlatformOffset) > this._gameConfig.minimalOffset) {
+                this._lastPlatformPosition = this._activePlatform.position;
+                const activePlatformState = this._activePlatform.getState();
+                activePlatformState.msElapsed = msElapsed;
+                activePlatformState.lastMessageId = lastMessageId;
+
+                this.eventBus.dispatchEvent(PlatformMovedEvent.create(activePlatformState));
+            }
         }
 
         this._handleUserInput(time);
-
-        const activePlatformOffset = math.subtract(this._activePlatform.position, this._lastPlatformPosition);
-        if (math.norm(activePlatformOffset) > this._gameConfig.minimalOffset) {
-            this._lastPlatformPosition = this._activePlatform.position;
-            this.eventBus.dispatchEvent(PlatformMovedEvent.create(this._activePlatform));
-        }
-
         this._redraw();
     }
 

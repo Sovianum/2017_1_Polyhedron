@@ -49,7 +49,7 @@ export class ServerCommunicator {
 
             try {
                 const newEvent = this._eventMap[gameEventClass].create(data);
-                // newEvent.data.id = detail.id;
+                newEvent.data.id = detail.id;
                 newEvent.data.timestamp = detail.timestamp;
                 this._eventBus.dispatchEvent(newEvent);
             } catch (error) {
