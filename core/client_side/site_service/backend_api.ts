@@ -1,7 +1,8 @@
 
 // require('isomorphic-fetch');  // TODO Check if it is possible to use require with ts
 import {Promise} from "es6-promise";
-const ROOT_URL = 'https://polyhedron-backend.herokuapp.com';
+// const ROOT_URL = 'https://polyhedron-backend.herokuapp.com';
+const ROOT_URL = 'localhost:8080';
 
 const RELATIVE_URL_MAP = {
     register: '/api/user/registration',
