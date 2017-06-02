@@ -94,6 +94,9 @@ export namespace gameEvents {
     }
 
 
+    export class GameTerminationEvent extends BaseEvent {}
+
+
     export class ClientDefeatEvent extends BaseEvent {}
 
 

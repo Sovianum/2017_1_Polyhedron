@@ -171,6 +171,14 @@ export class Game {
         );
 
         this.eventBus.addEventListener(
+            events.gameEvents.GameTerminationEvent.eventName,
+            event => {
+                const {success, userIndex, timestamp} = event.data.detail;
+                this._handleGameTerminationEvent(success, userIndex, timestamp);
+            }
+        );
+
+        this.eventBus.addEventListener(
             GameStartEvent.eventName,
             event => {
                 this.start();
@@ -268,12 +276,37 @@ export class Game {
                 .reduce((curr, next) => curr && next);
 
             if (isWinner) {
-                // this.eventBus.dispatchEvent(RenderPageEvent.create({
-                //     url: GAME_OVER_PAGE_URL,
-                //     options: {isWinner}
-                // }));
+                this.eventBus.dispatchEvent(RenderPageEvent.create({
+                    url: GAME_OVER_PAGE_URL,
+                    options: {isWinner}
+                }));
             }
         }
+    }
+
+    private _handleGameTerminationEvent(success: boolean, userIndex: number, timestamp: number) {
+        if (userIndex !== 0) {
+            this._postponeExecution(
+                () => this._world.userSectors[userIndex].setNeutral(true),
+                timestamp
+            );
+        } else {
+            this._postponeExecution(
+                () => {
+                    this.eventBus.dispatchEvent(RenderPageEvent.create({
+                        url: GAME_OVER_PAGE_URL,
+                        options: {isWinner: success}
+                    }));
+                },
+                timestamp
+            );
+        }
+    }
+
+    private _postponeExecution(callback, timestamp) {
+        const serverTime = this._world.getStateQueue().getServerTime(Date.now());
+        const timeout = timestamp - serverTime;
+        setTimeout(callback, timeout);
     }
 
     private _transmitPlatformUpdate() {

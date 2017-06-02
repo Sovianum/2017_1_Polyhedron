@@ -85,6 +85,10 @@ export class GameWorld implements Drawable, Stateful<GameWorldState> {
         this._stateQueue.addState(state, timestamp);
     }
 
+    public getStateQueue(): ServerRuledStateQueue<GameWorldState> {
+        return this._stateQueue;
+    }
+
     public get ball(): Ball {
         return this._ball;
     }
