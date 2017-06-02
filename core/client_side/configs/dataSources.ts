@@ -42,7 +42,7 @@ export const config = {
 
         network: {
             // wsUrl: "ws://localhost:8080/api/user/game"
-            wsUrl: "ws://polyhedron-backend.herokuapp.com/api/user/game"
+            wsUrl: "wss://polyhedron-backend.herokuapp.com/api/user/game"
         }
     }
 };
