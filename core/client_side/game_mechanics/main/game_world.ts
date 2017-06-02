@@ -180,8 +180,6 @@ export class GameWorld implements Drawable, Stateful<GameWorldState> {
             .sort((data1, data2) => data1.collision.time - data2.collision.time)[0];
 
         if (firstCollisionData) {
-            this.ball.moveBy(math.multiply(this.ball.velocity, firstCollisionData.collision.time));
-
             if (firstCollisionData.tag === 'platform') {
                 this._handlePlatformCollision(
                     firstCollisionData.collision.obstacle,
@@ -193,6 +191,8 @@ export class GameWorld implements Drawable, Stateful<GameWorldState> {
             } else if (firstCollisionData.tag === 'neutralSector') {
                 this._handleNeutralSectorCollision(firstCollisionData.collision.obstacle, this.ball);
             }
+
+            this.ball.moveBy(math.multiply(this.ball.velocity, firstCollisionData.collision.time));
 
             return firstCollisionData.collision.time;
         }

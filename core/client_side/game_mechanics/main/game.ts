@@ -257,7 +257,7 @@ export class Game {
 
         if (sectorIndex === 0) {
             if (this._mode === MODES.single) {
-                this.eventBus.dispatchEvent(events.gameEvents.ClientDefeatEvent.create(event.detail));
+                // this.eventBus.dispatchEvent(events.gameEvents.ClientDefeatEvent.create(event.detail));
             }
         } else {
             this._bots[sectorIndex - 1].stop();
@@ -268,10 +268,10 @@ export class Game {
                 .reduce((curr, next) => curr && next);
 
             if (isWinner) {
-                this.eventBus.dispatchEvent(RenderPageEvent.create({
-                    url: GAME_OVER_PAGE_URL,
-                    options: {isWinner}
-                }));
+                // this.eventBus.dispatchEvent(RenderPageEvent.create({
+                //     url: GAME_OVER_PAGE_URL,
+                //     options: {isWinner}
+                // }));
             }
         }
     }

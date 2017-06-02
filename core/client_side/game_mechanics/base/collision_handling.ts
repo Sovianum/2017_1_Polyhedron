@@ -12,6 +12,7 @@ export interface CircleCollider extends SolidBody {
 
 export interface PolygonObstacle extends SolidBody {
     getClosestPoint(origin: Point);
+    getNormDirection(collisionPoint: Point, colliderPosition: Point): Vector;
 }
 
 

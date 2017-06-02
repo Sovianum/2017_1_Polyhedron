@@ -11,6 +11,7 @@ import {PolygonObstacle} from "../base/collision_handling";
 import {PlatformState} from "../event_system/messages";
 import {Drawable, Rectangular} from "../drawing/interfaces";
 import {specificToCanvasCS} from "../drawing/canvas_transform";
+import {Point, Vector} from "../base/common";
 
 
 export class Platform extends GameComponent implements Drawable, PolygonObstacle, Stateful<PlatformState> {
@@ -78,6 +79,11 @@ export class Platform extends GameComponent implements Drawable, PolygonObstacle
                 };
             })
             .sort((obj1, obj2) => obj1.distance - obj2.distance)[0].point;
+    }
+
+    public getNormDirection(collisionPoint: Point, colliderPosition: Point): Vector {
+        return math.subtract(colliderPosition, collisionPoint);
+        // return math.divide(norm, math.norm(norm));
     }
 
     public getDrawing() {

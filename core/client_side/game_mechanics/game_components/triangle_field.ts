@@ -8,7 +8,8 @@ import {PolygonObstacle} from "../base/collision_handling";
 import {Line} from "../geometry_shapes/line";
 import {Drawable, Rectangular} from "../drawing/interfaces";
 import {specificToCanvasCS} from "../drawing/canvas_transform";
-import {Point} from "../base/common";
+import {Point, Vector} from "../base/common";
+import * as math from '../../../_lib/math';
 
 
 export class TriangleField extends GameComponent implements Drawable, PolygonObstacle {
@@ -99,10 +100,18 @@ export class TriangleField extends GameComponent implements Drawable, PolygonObs
     }
 
     public getClosestPoint(origin: Point): Point {
-        const localBasePoints = this.shape.getBasePoints();
-        const globalBasePoints = localBasePoints.map(point => this.toGlobals(point));
-        const baseLine = new Line(globalBasePoints[0], globalBasePoints[1]);
-        return baseLine.getClosestPoint(origin);
+        if (!this.checkFieldEscape(origin)) {
+            const localBasePoints = this.shape.getBasePoints();
+            const globalBasePoints = localBasePoints.map(point => this.toGlobals(point));
+            const baseLine = new Line(globalBasePoints[0], globalBasePoints[1]);
+            return baseLine.getClosestPoint(origin);
+        } else {
+            return origin;
+        }
+    }
+
+    public getNormDirection(collisionPoint: Point, colliderPosition: Point): Vector {
+        return this.toGlobalsWithoutOffset([0, 1]);
     }
 
     public getDrawing() {
@@ -131,5 +140,10 @@ export class TriangleField extends GameComponent implements Drawable, PolygonObs
             context.lineWidth = 1;
             context.stroke();
         };
+    }
+
+    private checkFieldEscape(globalPoint: Point): boolean {
+        const localPoint = this.toLocals(globalPoint);
+        return !this._triangle.contains(localPoint) && this._triangle.isInSector(localPoint);
     }
 }
