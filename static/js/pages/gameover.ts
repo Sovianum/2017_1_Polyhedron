@@ -20,6 +20,8 @@ export class GameOver extends BasePage {
             items: [
                 {text: 'Вы победили!'},
                 {text: '<a href="/game">Еще партию?</a>'},
+                {text: '<br>Чтобы сохранить свой результат, нужно <a href="/login">Войти</a> ' +
+                'или <a href="/signup">Зарегистрироваться</a>'}
             ],
             parent: this._content
         });
@@ -27,6 +29,8 @@ export class GameOver extends BasePage {
             items: [
                 {text: 'К сожалению, Вы проиграли.'},
                 {text: '<a href="/game">Отыграемся?</a>'},
+                {text: '<br>Чтобы сохранить свой результат, нужно <a href="/login">Войти</a> ' +
+                'или <a href="/signup">Зарегистрироваться</a>'}
             ],
             parent: this._content
         });

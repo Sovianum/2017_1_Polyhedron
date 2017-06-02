@@ -68,7 +68,10 @@ export class Top extends Component {
                 this.variableMap.set('user', null);
                 const userpanel = document.querySelector(".js-top");
                 userpanel.innerHTML = renderTop.template({
-                    user: null
+                    user: null,
+                    hide_menu: this.hideMenu,
+                    hide_login: this.hideLogin,
+                    hide_reg: this.hideReg
                 });
             });
         return this;

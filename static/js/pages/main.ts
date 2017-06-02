@@ -24,7 +24,7 @@ const alert = document.querySelector(".js-alert");
 Object.keys(pugRuntime).forEach(key => window['pug_' + key] = pugRuntime[key]);
 
 export const router = new Router({
-    '^/?$': new Index(heading, content, alert),
+    '^/?$': new Index(heading, content, alert, {}),
 
     '^/?index$': new Index(heading, content, alert, {}),
     '^/?about$': new About(heading, content, alert, {}),
