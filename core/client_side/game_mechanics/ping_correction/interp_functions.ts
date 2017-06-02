@@ -38,7 +38,7 @@ export function getLastMessage<T>(time: number, states: Array<TimeStampState<T>>
     const sortedStates = states.sort((left, right) => left.timestamp - right.timestamp);
     const indexPair = getSurroundingIndexPair(time, sortedStates.map(state => state.timestamp));
 
-    if (!indexPair.first) {
+    if (indexPair.first == null) {
         return null;
     } else {
         return states[indexPair.first];

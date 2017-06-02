@@ -81,9 +81,8 @@ export class Platform extends GameComponent implements Drawable, PolygonObstacle
             .sort((obj1, obj2) => obj1.distance - obj2.distance)[0].point;
     }
 
-    public getNormDirection(collisionPoint: Point, colliderPosition: Point): Vector {
+    public getNormDirection(colliderPosition: Point, collisionPoint: Point): Vector {
         return math.subtract(colliderPosition, collisionPoint);
-        // return math.divide(norm, math.norm(norm));
     }
 
     public getDrawing() {

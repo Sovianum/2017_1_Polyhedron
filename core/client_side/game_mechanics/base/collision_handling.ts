@@ -88,7 +88,7 @@ export function getCollision(
     );
     const closestPoint = obstacle.getClosestPoint(relPosition);
     const distance = math.norm(math.subtract(closestPoint, relPosition));
-    const norm = math.subtract(relPosition, closestPoint);
+    const norm = obstacle.getNormDirection(relPosition, closestPoint);
 
     if (distance <= collider.radius) {
         return new CollisionInfo(time, closestPoint, norm);

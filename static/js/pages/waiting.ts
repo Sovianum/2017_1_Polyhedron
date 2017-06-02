@@ -31,8 +31,9 @@ export class Waiting extends BasePage {
         super(heading, content, alert, options);
         this.text = new Text({
             items: [
-                {text: 'Пожалуйста, подождите'},
-                {text: 'Идёт подбор противников'}
+                {text: 'Пожалуйста, подождите:'},
+                {text: 'Идёт подбор противников.'},
+                {text: 'Готовность: <span id="ready">0</span> из 3'}
             ],
             parent: this._content
         });

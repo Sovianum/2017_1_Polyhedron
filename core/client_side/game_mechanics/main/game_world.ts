@@ -121,13 +121,10 @@ export class GameWorld implements Drawable, Stateful<GameWorldState> {
         const lastMessage = getLastMessage(now, this._stateQueue.getQueue());
 
         if (interpState) {
-            // const temp = this._platforms[0].getState();
-
             this.setState(interpState);
             this._lastUpdate += 1;
 
             this._platforms.forEach((platform, index) => platform.setState(interpState.platformsState[index]));
-            // this._platforms[0].setState(temp); // TODO get rid of this trick
         }
 
         this.makeSinglePlayerIteration(time);

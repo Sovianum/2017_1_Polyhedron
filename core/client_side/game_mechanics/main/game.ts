@@ -277,15 +277,14 @@ export class Game {
     }
 
     private _transmitPlatformUpdate() {
-        // if (this._updateFlag) {
-        //     this.eventBus.dispatchEvent(events.gameEvents.PlatformUpdateEvent.create(this._actualUpdate));
-        //     resetPlatformUpdate(this._actualUpdate);
-        // }
+        const needReset = math.norm(this._actualUpdate.offset) < 0.0001;
 
-        this.eventBus.dispatchEvent(events.gameEvents.PlatformUpdateEvent.create(this._actualUpdate));
-        resetPlatformUpdate(this._actualUpdate);
+        if (this._updateFlag) {
+            this.eventBus.dispatchEvent(events.gameEvents.PlatformUpdateEvent.create(this._actualUpdate));
+            resetPlatformUpdate(this._actualUpdate);
+        }
 
-        if (math.norm(this._actualUpdate.offset) < 0.0001) {
+        if (needReset) {
             this._updateFlag = false;
         }
     }
