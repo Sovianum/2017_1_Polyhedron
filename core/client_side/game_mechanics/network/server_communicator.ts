@@ -42,6 +42,11 @@ export class ServerCommunicator {
             event => this.handlePlatformMovedEvent(event)
         );
 
+        this._eventBus.addEventListener(
+            events.gameEvents.PlatformUpdateEvent.eventName,
+            event => this.handlePlatformUpdateEvent(event)
+        );
+
         this._eventBus.addEventListener(events.networkEvents.ServerMessageEvent.eventName, (event: CustomEvent) => {
             const detail = event.detail;
             const gameEventClass = detail.type;
@@ -61,6 +66,13 @@ export class ServerCommunicator {
     private handlePlatformMovedEvent(event) {
         this._eventBus.dispatchEvent(events.networkEvents.ClientMessageEvent.create({
             type: events.gameEvents.PlatformMovedEvent.eventName,
+            data: event.detail
+        }));
+    }
+
+    private handlePlatformUpdateEvent(event) {
+        this._eventBus.dispatchEvent(events.networkEvents.ClientMessageEvent.create({
+            type: events.gameEvents.PlatformUpdateEvent.eventName,
             data: event.detail
         }));
     }

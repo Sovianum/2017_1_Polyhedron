@@ -17,7 +17,7 @@ import {getByCircularIndex, Point, Vector} from "../base/common";
 import {Platform} from "../game_components/platform";
 import {TriangleField} from "../game_components/triangle_field";
 import RenderPageEvent = serviceEvents.RenderPageEvent;
-import {GameWorldState} from "../event_system/messages";
+import {combinePlatformUpdates, GameWorldState, PlatformUpdate, resetPlatformUpdate} from "../event_system/messages";
 import GameStartEvent = networkEvents.GameStartEvent;
 import PlatformMovedEvent = gameEvents.PlatformMovedEvent;
 import {specificToCanvasCS} from "../drawing/canvas_transform";
@@ -47,7 +47,8 @@ export class Game {
 
     private _platformVelocityDirection: number[] = [0, 0];
 
-    private _setIntervalID: number;
+    private _gameUpdaterId: number;
+    private _offsetTransmitterId: number;
     private _lastPlatformPosition: number[];
     private _mode: string;
 
@@ -57,6 +58,9 @@ export class Game {
     private _running: boolean;
     private _nicknames: string[];
 
+    private _actualUpdate: PlatformUpdate;
+    private _updateFlag: boolean;
+
     constructor(mode, nicknames?: string[]) {
         this._field = {
             height: this._gameConfig.fieldSize,
@@ -64,7 +68,7 @@ export class Game {
         };
         this._alert = document.querySelector(ALERT_SELECTOR);
 
-        this._setIntervalID = null;
+        this._gameUpdaterId = null;
         this._lastPlatformPosition = null;
         this._mode = mode;
         this._running = false;
@@ -78,6 +82,8 @@ export class Game {
         } else {
             this._nicknames = nicknames;
         }
+
+        this._actualUpdate = {offset: [0, 0], velocity: [0, 0]};
 
     }
 
@@ -93,17 +99,20 @@ export class Game {
 
     public start() {
         this._running = true;
-        this._setIntervalID = setInterval(() => this._makeIteration(this._gameConfig.time), this._gameConfig.time);
+        this._gameUpdaterId = setInterval(() => this._makeIteration(this._gameConfig.time), this._gameConfig.time);
+        if (this._mode === MODES.multi) {
+            this._offsetTransmitterId = setInterval(() => this._transmitPlatformUpdate(), this._gameConfig.updateTime);
+        }
     }
 
     public stop() {
         this._running = false;
-        clearInterval(this._setIntervalID);
+        clearInterval(this._gameUpdaterId);
     }
 
     public continueGame() {
         this._running = true;
-        this._setIntervalID = setInterval(() => this._makeIteration(this._gameConfig.time), this._gameConfig.time);
+        this._gameUpdaterId = setInterval(() => this._makeIteration(this._gameConfig.time), this._gameConfig.time);
     }
 
     public getWorldState(): GameWorldState {
@@ -197,15 +206,15 @@ export class Game {
         } else if (this._mode === MODES.multi) {
             const {msElapsed, lastMessageId} = this._world.makeMultiPlayerIteration(time);
 
-            const activePlatformOffset = math.subtract(this._activePlatform.position, this._lastPlatformPosition);
-            if (math.norm(activePlatformOffset) > this._gameConfig.minimalOffset) {
-                this._lastPlatformPosition = this._activePlatform.position;
-                const activePlatformState = this._activePlatform.getState();
-                activePlatformState.msElapsed = msElapsed;
-                activePlatformState.lastMessageId = lastMessageId;
-
-                this.eventBus.dispatchEvent(PlatformMovedEvent.create(activePlatformState));
-            }
+            // const activePlatformOffset = math.subtract(this._activePlatform.position, this._lastPlatformPosition);
+            // if (math.norm(activePlatformOffset) > this._gameConfig.minimalOffset) {
+            //     this._lastPlatformPosition = this._activePlatform.position;
+            //     const activePlatformState = this._activePlatform.getState();
+            //     activePlatformState.msElapsed = msElapsed;
+            //     activePlatformState.lastMessageId = lastMessageId;
+            //
+            //     this.eventBus.dispatchEvent(PlatformMovedEvent.create(activePlatformState));
+            // }
         }
 
         this._handleUserInput(time);
@@ -215,7 +224,16 @@ export class Game {
     private _handleUserInput(time: number) {
         const velocity = math.multiply(this._platformVelocityDirection, this._gameConfig.platformVelocity);
         const localOffset = math.multiply(this._platformVelocityDirection, this._gameConfig.platformVelocity * time);
-        this._world.movePlatform(this.getPlatformByIndex(0), localOffset, velocity);
+
+        if (this._mode === MODES.single) {
+            this._world.movePlatform(this.getPlatformByIndex(0), localOffset, velocity);
+        } else {
+            const newUpdate = {offset: localOffset, velocity};
+            if (math.norm(newUpdate.offset) > 0.0001) {
+                this._updateFlag = true;
+            }
+            this._actualUpdate = combinePlatformUpdates(this._actualUpdate, newUpdate);
+        }
     }
 
     private _handleDefeatEvent(event) {
@@ -255,6 +273,20 @@ export class Game {
                     options: {isWinner}
                 }));
             }
+        }
+    }
+
+    private _transmitPlatformUpdate() {
+        // if (this._updateFlag) {
+        //     this.eventBus.dispatchEvent(events.gameEvents.PlatformUpdateEvent.create(this._actualUpdate));
+        //     resetPlatformUpdate(this._actualUpdate);
+        // }
+
+        this.eventBus.dispatchEvent(events.gameEvents.PlatformUpdateEvent.create(this._actualUpdate));
+        resetPlatformUpdate(this._actualUpdate);
+
+        if (math.norm(this._actualUpdate.offset) < 0.0001) {
+            this._updateFlag = false;
         }
     }
 

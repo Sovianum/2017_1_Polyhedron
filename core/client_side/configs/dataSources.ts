@@ -3,6 +3,7 @@
 const MILLISECONDS_PER_SECOND = 1000;
 const BOT_FRAME_RATE = 60;
 const CLIENT_FRAME_RATE = 60;
+const UPDATE_FRAME_RATE = 30;
 
 
 export const config = {
@@ -27,6 +28,7 @@ export const config = {
             fieldSize: 100,
             playersNum: 4,
             time: MILLISECONDS_PER_SECOND / CLIENT_FRAME_RATE,
+            updateTime: MILLISECONDS_PER_SECOND / UPDATE_FRAME_RATE,
             fillFactor: 0.7,
             ballRelativeRadius: 0.05,
             ballVelocity: [0.00, 0.06],
@@ -39,7 +41,8 @@ export const config = {
         },
 
         network: {
-            wsUrl: "ws://localhost:8080/api/user/game"
+            // wsUrl: "ws://localhost:8080/api/user/game"
+            wsUrl: "ws://polyhedron-backend.herokuapp.com/api/user/game"
         }
     }
 };
