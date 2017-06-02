@@ -20,6 +20,7 @@ import RenderPageEvent = serviceEvents.RenderPageEvent;
 import {GameWorldState} from "../event_system/messages";
 import GameStartEvent = networkEvents.GameStartEvent;
 import PlatformMovedEvent = gameEvents.PlatformMovedEvent;
+import {specificToCanvasCS} from "../drawing/canvas_transform";
 
 
 const GAME_OVER_PAGE_URL = '/gameover';
@@ -54,8 +55,9 @@ export class Game {
     private _world: GameWorld;
 
     private _running: boolean;
+    private _nicknames: string[];
 
-    constructor(mode) {
+    constructor(mode, nicknames?: string[]) {
         this._field = {
             height: this._gameConfig.fieldSize,
             width: this._gameConfig.fieldSize
@@ -66,6 +68,17 @@ export class Game {
         this._lastPlatformPosition = null;
         this._mode = mode;
         this._running = false;
+
+        if (!nicknames) {
+            if (mode === MODES.single) {
+                this._nicknames = ["You", "Bot 1", "Bot 2", "Bot 3"];
+            } else {
+                this._nicknames = [];
+            }
+        } else {
+            this._nicknames = nicknames;
+        }
+
     }
 
     public init() {
@@ -103,6 +116,16 @@ export class Game {
 
     private _getUserSectorByIndex(index): TriangleField {
         return getByCircularIndex(this._world.userSectors, index);
+    }
+
+    private _getIndexById(id: number, items: any[]) {
+        for (let i = 0; i !== items.length; ++i) {
+            if (items[i].id === id) {
+                return i;
+            }
+        }
+
+        return null;
     }
 
     private get _activePlatform() {
@@ -163,6 +186,9 @@ export class Game {
                 this._world.incrementScore();
             }
         });
+
+        this.eventBus.addEventListener(events.gameEvents.UserSectorCollision.eventName,
+            event => this._handleUserSectorCollisionEvent(event));
     }
 
     private _makeIteration(time) {
@@ -200,13 +226,6 @@ export class Game {
         if (this._running && this._mode === MODES.single) {
             const isWinner = event.detail !== this._activePlatform.id;
 
-            // if (isWinner) {
-            //     this._alert.innerHTML = 'Вы победили!';
-            // } else {
-            //     this._alert.innerHTML = 'Вы проиграли';
-            // }
-
-            // TODO either remove below or above
             this.eventBus.dispatchEvent(RenderPageEvent.create({
                 url: GAME_OVER_PAGE_URL,
                 options: {isWinner}
@@ -215,14 +234,56 @@ export class Game {
         }
     }
 
+    private _handleUserSectorCollisionEvent(event) {
+        const sectorIndex = this._getIndexById(event.detail, this._world.userSectors);
+
+        if (sectorIndex === 0) {
+            if (this._mode === MODES.single) {
+                this.eventBus.dispatchEvent(events.gameEvents.ClientDefeatEvent.create(event.detail));
+            }
+        } else {
+            this._bots[sectorIndex - 1].stop();
+            this._getUserSectorByIndex(sectorIndex).setNeutral(true);
+
+            const isWinner = this._world.userSectors.slice(1)
+                .map(sector => sector.isNeutral())
+                .reduce((curr, next) => curr && next);
+
+            if (isWinner) {
+                this.eventBus.dispatchEvent(RenderPageEvent.create({
+                    url: GAME_OVER_PAGE_URL,
+                    options: {isWinner}
+                }));
+            }
+        }
+    }
+
     private _createBots() {
         this._bots = [1, 2, 3].map(i => new Bot(this.getPlatformByIndex(i), this._world.ball));
+    }
+
+    private _drawNicknames(canvas: HTMLCanvasElement) {
+        const context = canvas.getContext("2d");
+        const heightCoefs = [1.1, 1.05, 1.05, 1.05];
+        const nicknamePositions = this._world.userSectors
+            .map((sector, index) => sector.toGlobals([0, -sector.height * heightCoefs[index]]));
+
+        context.fillStyle = "white";
+        context.font = "20px Arial";
+        const alignments = ["center", "start", "center", "end"];
+        this._nicknames.forEach((name, index) => {
+            const screenPoint = specificToCanvasCS(nicknamePositions[index], canvas, this._field);
+            context.textAlign = alignments[index];
+            context.fillText(name, screenPoint[0], screenPoint[1]);
+        });
     }
 
     private _redraw() {
         const draw = canvas => {
             const context = canvas.getContext("2d");
             context.clearRect(0, 0, canvas.width, canvas.height);
+            this._drawNicknames(canvas);
+
             this._world.getDrawing()(canvas, this._field);
         };
 

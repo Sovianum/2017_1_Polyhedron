@@ -96,36 +96,4 @@ export class ServerRuledStateQueue<T> extends AbstractStateQueue<T> {
     }
 }
 
-// const sq = new StateQueue<BallState>(5, interpBallState);
-// let i = 0;
-//
-// setInterval(
-//     () => {
-//         const state = {
-//             velocity: [i, i],
-//             position: [i, i]
-//         };
-//         i += 1;
-//         sq.addState(state);
-//     },
-//     500
-// );
-//
-// setTimeout(
-//     () => {
-//         setInterval(
-//             () => {
-//                 const result = sq.getInterpState(Date.now());
-//                 if (!result) {
-//                     console.log("Not ready yet");
-//                 } else {
-//                     console.log(result.position[0]);
-//                 }
-//             },
-//             100
-//         );
-//     },
-//     250
-// );
-
 

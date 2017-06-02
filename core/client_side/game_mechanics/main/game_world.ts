@@ -51,10 +51,8 @@ export class GameWorld implements Drawable, Stateful<GameWorldState> {
         this._neutralSectors = [];
         this._platforms = [];
         this._ball = null;
-        // this._stateQueue = new ClientRuledStateQueue<GameWorldState>(this._gameConfig.minQueueSize, interpGameWorldState);
         this._stateQueue = new ServerRuledStateQueue<GameWorldState>(this._gameConfig.minQueueSize, interpGameWorldState);
 
-        this._score = 0; // TODO only for pretest
         this._lastUpdate = 0;
 
         this._initSectors();
@@ -109,8 +107,6 @@ export class GameWorld implements Drawable, Stateful<GameWorldState> {
                 .concat(this._neutralSectors, this._platforms, [this._ball])
                 .map(drawable => drawable.getDrawing())
                 .forEach(draw => draw(canvas, initialRectangle));
-
-            this._writeScore(canvas);
         };
     }
 
@@ -234,7 +230,8 @@ export class GameWorld implements Drawable, Stateful<GameWorldState> {
             ball.bounceNorm(sector.getBottomNorm());
             this._lastCollidedObject = sector;
 
-            this.eventBus.dispatchEvent(events.gameEvents.ClientDefeatEvent.create(sector.id));
+            // this.eventBus.dispatchEvent(events.gameEvents.ClientDefeatEvent.create(sector.id));
+            this.eventBus.dispatchEvent(events.gameEvents.UserSectorCollision.create(sector.id));
         }
     }
 
@@ -252,15 +249,5 @@ export class GameWorld implements Drawable, Stateful<GameWorldState> {
 
             this.eventBus.dispatchEvent(events.gameEvents.BallBounced.create(platform.id));
         }
-    }
-
-    private _writeScore(canvas) {
-        const context = canvas.getContext('2d');
-        context.font = '30px Arial';
-        context.textAlign = "center";
-        context.fillStyle = "white";
-
-        const message = "Мячей отбито: " + this._score;
-        context.fillText(message, canvas.width * 0.5, canvas.height);
     }
 }

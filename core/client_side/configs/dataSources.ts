@@ -13,7 +13,7 @@ export const config = {
 
     dataSources: {
         bot: {
-            velocity: 0.15,
+            velocity: 0.01, // TODO speed up to 010
             time: MILLISECONDS_PER_SECOND / BOT_FRAME_RATE
         },
 
@@ -27,7 +27,7 @@ export const config = {
             fieldSize: 100,
             playersNum: 4,
             time: MILLISECONDS_PER_SECOND / CLIENT_FRAME_RATE,
-            fillFactor: 0.8,
+            fillFactor: 0.7,
             ballRelativeRadius: 0.05,
             ballVelocity: [0.00, 0.06],
             platformVelocity: 0.03,

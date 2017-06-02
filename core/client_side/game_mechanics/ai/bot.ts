@@ -25,6 +25,14 @@ export class Bot {
         this._init();
     }
 
+    public stop() {
+        clearInterval(this._setIntervalID);
+    }
+
+    public start() {
+        this._init();
+    }
+
     private _init() {
         this._setIntervalID = setInterval(() => {
             this._movePlatform(this._time);

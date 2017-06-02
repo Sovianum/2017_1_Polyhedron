@@ -88,6 +88,9 @@ export namespace gameEvents {
     export class ClientDefeatEvent extends BaseEvent {}
 
 
+    export class UserSectorCollision extends BaseEvent {}
+
+
     export class BallBounced extends BaseEvent {}
 
 

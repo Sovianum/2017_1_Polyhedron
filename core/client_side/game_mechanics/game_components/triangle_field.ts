@@ -59,6 +59,10 @@ export class TriangleField extends GameComponent implements Drawable, PolygonObs
         return this._isNeutral;
     }
 
+    public setNeutral(isNeutral: boolean) {
+        this._isNeutral = isNeutral;
+    }
+
     public isLoser(): boolean {
         return this._isLoser;
     }
