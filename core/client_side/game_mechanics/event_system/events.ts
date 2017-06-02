@@ -44,6 +44,9 @@ export namespace networkEvents {
     export class ServerErrorEvent extends BaseEvent {}
 
 
+    export class AnnouncementEvent extends BaseEvent {}
+
+
     export class ServerMessageEvent extends BaseEvent {}
 
 

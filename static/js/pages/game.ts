@@ -20,7 +20,7 @@ export class Game extends BasePage {
         this.mode = options.mode;
     }
 
-    public async render() {
+    public async render(options?) {
         try {
             this.reset();
         } catch (err) {
@@ -37,7 +37,7 @@ export class Game extends BasePage {
         this.gamepad.render(this._content.querySelector('.game'));
 
         const gameStarter = new GameStarter();
-        gameStarter.start('game', this.mode);
+        gameStarter.start('game', this.mode, options);
     }
 
     public reset() {

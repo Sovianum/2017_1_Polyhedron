@@ -10,6 +10,7 @@ import {EventBus} from "../../../core/client_side/game_mechanics/event_system/ev
 import {networkEvents} from "../../../core/client_side/game_mechanics/event_system/events";
 import GetReadyEvent = networkEvents.GetReadyEvent;
 import {router} from "./main";
+import AnnouncementEvent = networkEvents.AnnouncementEvent;
 
 
 export class Waiting extends BasePage {
@@ -27,20 +28,26 @@ export class Waiting extends BasePage {
     @Autowired(EventBus)
     private eventBus: EventBus;
 
+    private players: any[];
+
     constructor(heading, content, alert, options?) {
         super(heading, content, alert, options);
-        this.text = new Text({
-            items: [
-                {text: 'Пожалуйста, подождите:'},
-                {text: 'Идёт подбор противников.'},
-                {text: 'Готовность: <span id="ready">0</span> из 3'}
-            ],
-            parent: this._content
-        });
+        this.players = [];
+
+        this.text = this.createText();
 
         this.eventBus.addEventListener(
             GetReadyEvent.eventName,
-            () => router.renderAndSave('/battle')
+            () => router.renderAndSave('/battle', this.players.map(player => player.nickname))
+        );
+
+        this.eventBus.addEventListener(
+            AnnouncementEvent.eventName,
+            (event) => {
+                this.players = event.detail;
+                this.text = this.createText();
+                this.text.render();
+            }
         );
     }
 
@@ -51,5 +58,16 @@ export class Waiting extends BasePage {
         this.text.render();
 
         this.wsEndpoint.start();    // TODO make something more accurate
+    }
+
+    private createText(): Text {
+        return new Text({
+            items: [
+                {text: 'Пожалуйста, подождите:'},
+                {text: 'Идёт подбор противников.'},
+                {text: 'Готовность: <span id="ready">' + this.players.length + '</span> из 4'}
+            ],
+            parent: this._content
+        });
     }
 }
