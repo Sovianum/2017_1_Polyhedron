@@ -6,6 +6,7 @@ import {Gamepad} from '../components/gamepad/gamepad';
 import {GameStarter} from '../../../core/client_side/game_mechanics/main/game_start';
 import {Autowired} from "../../../core/client_side/game_mechanics/experimental/decorators";
 import {VariableContext} from "../../../core/client_side/game_mechanics/experimental/context";
+import {Drawer} from "../../../core/client_side/game_mechanics/drawing/drawer";
 
 
 export class Game extends BasePage {

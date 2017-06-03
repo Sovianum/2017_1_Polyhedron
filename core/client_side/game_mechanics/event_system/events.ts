@@ -79,6 +79,12 @@ export namespace networkEvents {
 
 
 export namespace gameEvents {
+    export class StopEvent extends BaseEvent {}
+
+
+    export class TruncateEvent extends BaseEvent {}
+
+
     export class PlatformMovedEvent extends BaseEvent {
         public static create(platformState: PlatformState) {
             return new MyCustomEvent(this.eventName, {

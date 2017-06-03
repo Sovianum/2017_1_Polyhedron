@@ -11,7 +11,14 @@ export class GameStarter {
     private drawer: Drawer;
 
     public start(canvasId: string, mode: string, nicknames?: string[]) {
-        this.drawer = new Drawer(document.getElementById(canvasId) as HTMLCanvasElement);
+        const drawer = this.variableMap.get('drawer');
+        if (!drawer) {
+            this.variableMap.set('drawer', new Drawer(document.getElementById(canvasId) as HTMLCanvasElement));
+            this.drawer = this.variableMap.get('drawer');
+        } else {
+            this.drawer = drawer;
+            this.drawer.setCanvas(document.getElementById(canvasId) as HTMLCanvasElement);
+        }
 
         const loop = new ClientSideGame(mode, nicknames);
 

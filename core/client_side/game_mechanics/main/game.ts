@@ -60,6 +60,7 @@ export class Game {
 
     private _actualUpdate: PlatformUpdate;
     private _updateFlag: boolean;
+    private _creation: number;
 
     constructor(mode, nicknames?: string[]) {
         this._field = {
@@ -85,6 +86,7 @@ export class Game {
 
         this._actualUpdate = {offset: [0, 0], velocity: [0, 0]};
 
+        this._creation = Date.now();
     }
 
     public init() {
@@ -106,8 +108,19 @@ export class Game {
     }
 
     public stop() {
+        if (!this._running) {
+            return;
+        }
         this._running = false;
+
+        this.eventBus.dispatchEvent(events.gameEvents.StopEvent.create());
+
         clearInterval(this._gameUpdaterId);
+        clearInterval(this._offsetTransmitterId);
+
+        this._bots.forEach(bot => bot.stop());
+
+        this.eventBus.dispatchEvent(events.gameEvents.TruncateEvent.create(Date.now()));
     }
 
     public continueGame() {
@@ -159,6 +172,11 @@ export class Game {
     }
 
     private _setListeners() {
+        this.eventBus.addEventListener(
+            events.gameEvents.StopEvent.eventName,
+            () => this.stop()
+        );
+
         this.eventBus.addEventListener(
             events.networkEvents.WorldUpdateEvent.eventName,
             event => {
@@ -343,6 +361,10 @@ export class Game {
     }
 
     private _redraw() {
+        if (!this._running) {
+            return;
+        }
+
         const draw = canvas => {
             const context = canvas.getContext("2d");
             context.clearRect(0, 0, canvas.width, canvas.height);
@@ -351,7 +373,7 @@ export class Game {
             this._world.getDrawing()(canvas, this._field);
         };
 
-        const event = DrawEvent.create(draw);
+        const event = DrawEvent.create({draw, timestamp: this._creation});
         this.eventBus.dispatchEvent(event);
     }
 }
