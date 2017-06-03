@@ -118,7 +118,9 @@ export class Game {
         clearInterval(this._gameUpdaterId);
         clearInterval(this._offsetTransmitterId);
 
-        this._bots.forEach(bot => bot.stop());
+        if (this._mode === MODES.single) {
+            this._bots.forEach(bot => bot.stop());
+        }
 
         this.eventBus.dispatchEvent(events.gameEvents.TruncateEvent.create(Date.now()));
     }
